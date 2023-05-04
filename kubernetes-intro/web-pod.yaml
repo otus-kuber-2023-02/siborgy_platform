@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: web
+  name: web
+spec:
+  initContainers:
+  - name: init
+    image: cirrusci/wget
+    command: ['sh', '-c', 'wget -O- https://tinyurl.com/otus-k8s-intro | sh']
+    resources:
+      requests:
+        memory: "32Mi"
+        cpu: "50m"
+      limits:
+        memory: "64Mi"
+        cpu: "70m"
+    volumeMounts:
+    - name: app
+      mountPath: /app
+  containers:
+  - name: web
+    image: siborgy/otus_k8s:kubernetes-intro-0.3
+    resources:
+      requests:
+        memory: "32Mi"
+        cpu: "50m"
+      limits:
+        memory: "128Mi"
+        cpu: "100m"
+    volumeMounts:
+    - name: app
+      mountPath: /app
+  volumes:
+  - name: app
+    emptyDir: {}
+            
